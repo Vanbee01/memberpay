@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  entries      LedgerEntry[]
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  memberNo  String   @unique
+  phone     String?
+  qrToken   String   @unique @default(uuid())
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wallet    Wallet?
+  entries   LedgerEntry[]
+  @@index([name])
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  memberId  String   @unique
+  balance   BigInt   @default(0)
+  updatedAt DateTime @updatedAt
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Restrict)
+}
+
+model LedgerEntry {
+  id             String   @id @default(cuid())
+  memberId       String
+  adminId        String
+  type           LedgerType
+  amount         BigInt
+  balanceBefore  BigInt
+  balanceAfter   BigInt
+  note           String?
+  idempotencyKey String   @unique
+  createdAt      DateTime @default(now())
+  member         Member   @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  admin          Admin    @relation(fields: [adminId], references: [id], onDelete: Restrict)
+  @@index([memberId, createdAt])
+  @@index([createdAt])
+}
+
+enum LedgerType {
+  TOPUP
+  CHARGE
+}
