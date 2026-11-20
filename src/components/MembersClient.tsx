@@ -35,8 +35,8 @@ export default function MembersClient(){
    for(const [x,y,sx,sy] of corners){ctx.beginPath();ctx.moveTo(x+sx*62,y);ctx.lineTo(x,y);ctx.lineTo(x,y+sy*62);ctx.stroke();}
    ctx.fillStyle="#fff";ctx.font="500 34px Arial, sans-serif";ctx.textAlign="center";
    ctx.fillText("TEMPEL",1035,340);ctx.fillText("QR CODE",1035,395);ctx.fillText("DI SINI",1035,450);
-   ctx.fillStyle="#fff";ctx.fillRect(900,470,270,160);
-   ctx.drawImage(img,900,470,270,160);
+   ctx.fillStyle="#fff";ctx.fillRect(935,385,200,200);
+   ctx.drawImage(img,940,390,190,190);
    ctx.textAlign="left";
    canvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="Member-"+selected.memberNo.replace(/[^a-z0-9_-]/gi,"_")+".png";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);},"image/png");
    URL.revokeObjectURL(svgUrl);
@@ -69,8 +69,7 @@ export default function MembersClient(){
       <div className="absolute top-[9%] right-[9%] w-[16%] h-[16%] border-r-[3px] sm:border-r-[6px] border-t-[3px] sm:border-t-[6px] border-white"/>
       <div className="absolute bottom-[9%] left-[9%] w-[16%] h-[16%] border-l-[3px] sm:border-l-[6px] border-b-[3px] sm:border-b-[6px] border-white"/>
       <div className="absolute bottom-[9%] right-[9%] w-[16%] h-[16%] border-r-[3px] sm:border-r-[6px] border-b-[3px] sm:border-b-[6px] border-white"/>
-      <div className="text-white text-center font-medium text-[10px] sm:text-base md:text-xl leading-tight mb-1 sm:mb-2">TEMPEL<br/>QR CODE<br/>DI SINI</div>
-      <div className="absolute opacity-0 pointer-events-none"><QRCodeSVG ref={qrRef} value={typeof window!=="undefined"?window.location.origin+"/scan?token="+selected.qrToken:""} size={256} level="H" bgColor="#ffffff" fgColor="#000000"/></div>
+      <div className="relative z-10 bg-white p-1 sm:p-2 rounded-sm w-[72%] aspect-square flex items-center justify-center"><QRCodeSVG ref={qrRef} value={typeof window!=="undefined"?window.location.origin+"/scan?token="+selected.qrToken:""} size={256} level="H" bgColor="#ffffff" fgColor="#000000" style={{width:"100%",height:"100%"}}/></div>
      </div>
     </div>
     <p className="text-slate-400 text-xs sm:text-sm mt-3 text-center">Kartu hitam landscape · QR identitas anggota · saldo tidak tersimpan di QR</p>
